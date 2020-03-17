@@ -45,6 +45,9 @@
           <!-- Card image -->
           <img class="large-image" id="camOne" src="/img/nofeed.png" alt="Card image cap">
           <p>FPS: <span id="fpsOne"></span></p>
+          <table id="tableOne">
+            
+          </table>          
             <!-- Text -->
           </div>
         </div>
@@ -60,6 +63,9 @@
           <!-- Card image -->
           <img class="large-image" id="camTwo" src="/img/nofeed.png" alt="Card image cap">
           <p>FPS: <span id="fpsTwo"></span></p>
+          <table id="tableTwo">
+            
+          </table>
             <!-- Text -->
           </div>
         </div>
@@ -91,16 +97,32 @@
     var fpsOne = 0;
     var fpsTwo = 0;
     socket.on('left', function (data) {
-      $("#camOne").attr('src',"data:image/png;base64," + data);
+      var payload = JSON.parse(data);
+      $("#camOne").attr('src',"data:image/png;base64," + payload.frame);
       fpsOne++;
-    });
+      var tempTxt = " ";
+      for (x in payload.json_payload) {
+        if(x !== "frame"){
+          tempTxt += "<tr><td>" + x + "</td><td>"+  +"</td></tr>";
+        }
+      }
+      $("#tableOne").html(tempTxt);      
+      });
     setInterval(()=>{
       $("#fpsOne").text(fpsOne);
       fpsOne = 0;
     },1000)
     socket.on('right', function (data) {
-      $("#camTwo").attr('src',"data:image/png;base64," + data);
+      var payload = JSON.parse(data);
+      $("#camTwo").attr('src',"data:image/png;base64," + payload.frame);
       fpsTwo++;
+      var tempTxt = " ";
+      for (x in payload.json_payload) {
+        if(x !== "frame"){
+          tempTxt += "<tr><td>" + x + "</td><td>" + payload.json_payload[x] + "</td></tr>";
+        }
+      }
+      $("#tableTwo").html(tempTxt);        
     });
     setInterval(()=>{
       $("#fpsTwo").text(fpsTwo);

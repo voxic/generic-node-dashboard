@@ -29,24 +29,35 @@ io.on('connection', function (socket) {
     console.log("Subbed to: " + process.env.LEFT_ENDPOINT);
     nc.subscribe(process.env.LEFT_ENDPOINT, (msg) => {
         console.log(msg);
-        var image = String(msg).substring(String(msg).indexOf("/9j"))
-        if(isBase64(image)){
-            socket.emit('left', image);
+        try {
+            var json_payload = JSON.parse(String(msg).substring(String(msg).indexOf("{")))
+            if(isBase64(json_payload.frame)){
+                socket.emit('left', JSON.stringify(json_payload));
+            }
+            else {
+                console.log("Not base64")
+            }
         }
-        else {
-            console.log("Not base64")
+        catch(err){
+            console.log("Bad JSON " + err)
         }
+
         
     });
     console.log("Subbed to: " + process.env.RIGHT_ENDPOINT);
     nc.subscribe(process.env.RIGHT_ENDPOINT, (msg) => {
         console.log(msg);
-        var image = String(msg).substring(String(msg).indexOf("/9j"))
-        if(isBase64(image)){
-            socket.emit('right', image);
+        try {
+            var json_payload = JSON.parse(String(msg).substring(String(msg).indexOf("{")))
+            if(isBase64(json_payload.frame)){
+                socket.emit('right', JSON.stringify(json_payload));
+            }
+            else {
+                console.log("Not base64")
+            }
         }
-        else {
-            console.log("Not base64")
+        catch(err){
+            console.log("Bad JSON " + err)
         }
     });
 });
