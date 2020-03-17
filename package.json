@@ -1,0 +1,18 @@
+{
+  "name": "generic-node-dashboard",
+  "version": "1.0.0",
+  "description": "A dashboard for cameras",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Emil Nilsson",
+  "license": "MIT",
+  "dependencies": {
+    "ejs": "^3.0.1",
+    "express": "^4.17.1",
+    "is-base64": "^1.1.0",
+    "nats": "^1.2.4",
+    "socket.io": "^2.3.0"
+  }
+}

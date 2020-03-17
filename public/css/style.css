@@ -1,0 +1,16 @@
+/*
+ * Project: generic-node-dashboard
+ * File: public/css/style.css
+ * Author: Emil Nilsson
+ * Contact: emil.nilsson@nutanix.com
+ */
+
+ .navbar-custom {
+    background-color: #ff000d;
+    padding-top: 3em;
+}
+
+.large-image {
+    min-width: 100%;
+    max-width: 100%;
+}
