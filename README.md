@@ -1,3 +1,11 @@
+
+ [//]: # ( ** )  
+ [//]: # ( * Project: generic-node-dashboard)  
+ [//]: # ( * File: README.md)  
+ [//]: # ( * Author: Emil Nilsson)  
+ [//]: # ( * Contact: emil.nilsson@nutanix.com)  
+ [//]: # ( ** )  
+
 # Generic Node Dashboard
 
 Simple Dashboard built using MDBootstrap, Express, Socket.io, NATS.io and Node to display two video feeds and relevant data.
