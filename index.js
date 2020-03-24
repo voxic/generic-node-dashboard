@@ -28,15 +28,24 @@ io.on('connection', function (socket) {
     // Subscribe to the "messages" topic
     console.log("Subbed to: " + process.env.LEFT_ENDPOINT);
     nc.subscribe(process.env.LEFT_ENDPOINT, (msg) => {
-        console.log(msg);
         try {
             var json_payload = JSON.parse(String(msg).substring(String(msg).indexOf("{")))
-            if(isBase64(json_payload.frame)){
-                socket.emit('left', JSON.stringify(json_payload));
+            if("frame" in json_payload){
+                if(json_payload.frame.endsWith('\n')){
+                    json_payload.frame = json_payload.frame.replace(/\n/gm, '')
+                }
+                console.log(json_payload);
+                if(isBase64(json_payload.frame)){
+                    socket.emit('left_frame', json_payload.frame);
+                    socket.emit('left_data', JSON.stringify(json_payload.json_payload));
+                }
+                else {
+                    console.log("Not base64")
+                }
+            }else {
+                socket.emit('left_data', JSON.stringify(json_payload.json_payload));
             }
-            else {
-                console.log("Not base64")
-            }
+
         }
         catch(err){
             console.log("Bad JSON " + err)
@@ -46,15 +55,25 @@ io.on('connection', function (socket) {
     });
     console.log("Subbed to: " + process.env.RIGHT_ENDPOINT);
     nc.subscribe(process.env.RIGHT_ENDPOINT, (msg) => {
-        console.log(msg);
+        
         try {
             var json_payload = JSON.parse(String(msg).substring(String(msg).indexOf("{")))
-            if(isBase64(json_payload.frame)){
-                socket.emit('right', JSON.stringify(json_payload));
+            if("frame" in json_payload){
+                if(json_payload.frame.endsWith('\n')){
+                    json_payload.frame = json_payload.frame.replace(/\n/gm, '')
+                }
+                console.log(json_payload);
+                if(isBase64(json_payload.frame)){
+                    socket.emit('right_frame', json_payload.frame);
+                    socket.emit('right_data', JSON.stringify(json_payload.json_payload));
+                }
+                else {
+                    console.log("Not base64")
+                }
+            }else {
+                socket.emit('right_data', JSON.stringify(json_payload.json_payload));
             }
-            else {
-                console.log("Not base64")
-            }
+
         }
         catch(err){
             console.log("Bad JSON " + err)

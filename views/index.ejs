@@ -96,38 +96,71 @@
     var socket = io.connect(window.location.origin);
     var fpsOne = 0;
     var fpsTwo = 0;
-    socket.on('left', function (data) {
-      var payload = JSON.parse(data);
-      $("#camOne").attr('src',"data:image/png;base64," + payload.frame);
-      fpsOne++;
-      var tempTxt = " ";
-      for (x in payload.json_payload) {
-        if(x !== "frame"){
-          tempTxt += "<tr><td>" + x + "</td><td>"+  +"</td></tr>";
+    var lastLeftData = '';
+    var lastRightData = '';
+    socket.on('left_frame', function (data) {
+        try {
+          $("#camOne").attr('src',"data:image/png;base64," + data);
+          fpsOne++; 
         }
-      }
-      $("#tableOne").html(tempTxt);      
+        catch(err){
+          console.log(err);
+        }
       });
     setInterval(()=>{
       $("#fpsOne").text(fpsOne);
       fpsOne = 0;
     },1000)
-    socket.on('right', function (data) {
-      var payload = JSON.parse(data);
-      $("#camTwo").attr('src',"data:image/png;base64," + payload.frame);
-      fpsTwo++;
-      var tempTxt = " ";
-      for (x in payload.json_payload) {
-        if(x !== "frame"){
-          tempTxt += "<tr><td>" + x + "</td><td>" + payload.json_payload[x] + "</td></tr>";
-        }
+
+    socket.on('left_data', function(data){
+      try {
+        if(data.length > 1){
+          var payload = JSON.parse(data);
+          var tempTxt = " ";
+          if(lastLeftData !== payload){
+            for (x in payload) {
+                tempTxt += "<tr><td>" + x + "</td><td>"+ payload[x] +"</td></tr>";
+            }
+          $("#tableOne").html(tempTxt);
+          lastLeftData = payload;
+        }  
+      }        
+      } catch (error) {
+        console.log("Bad JSON in left json_payload")
       }
-      $("#tableTwo").html(tempTxt);        
     });
+
+    socket.on('right_frame', function (data) {
+        try {
+          $("#camTwo").attr('src',"data:image/png;base64," + data);
+          fpsTwo++; 
+        }
+        catch(err){
+          console.log(err);
+        }
+      });
     setInterval(()=>{
       $("#fpsTwo").text(fpsTwo);
       fpsTwo = 0;
-    },1000)    
+    },1000)
+
+    socket.on('right_data', function(data){
+      try {
+        if(data.length > 1){
+          var payload = JSON.parse(data);
+          var tempTxt = " ";
+          if(lastRightData !== payload){
+            for (x in payload) {
+                tempTxt += "<tr><td>" + x + "</td><td>"+ payload[x] +"</td></tr>";
+            }
+          $("#tableTwo").html(tempTxt);
+          lastRightData = payload;
+        }
+      }        
+      } catch (error) {
+        console.log("Bad JSON in right json_payload")
+      }
+    });  
   </script>
 </body>
 </html>
